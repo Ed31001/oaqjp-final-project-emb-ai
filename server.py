@@ -1,3 +1,4 @@
+"""import"""
 from flask import Flask, render_template, request
 from EmotionDetection.emotion_detection import emotion_detector
 
@@ -5,6 +6,7 @@ app = Flask("Emotion Detector")
 
 @app.route("/emotionDetector")
 def emo_detector():
+    """emotion detector"""
     text_to_analyze = request.args.get('textToAnalyze')
     response = emotion_detector(text_to_analyze)
     anger = response['anger']
@@ -12,12 +14,18 @@ def emo_detector():
     fear = response['fear']
     joy = response['joy']
     sadness = response['sadness']
-    dominantEmotion = response['dominant_emotion']
+    domin_emotion = response['dominant_emotion']
 
-    return "For the given statement, the system resonse is 'anger': {}, 'disgust': {}, 'fear': {}, 'joy': {}, 'sadness': {}. The dominant emotion is {}.".format(anger, disgust, fear, joy, sadness, dominantEmotion)
+    if domin_emotion is None:
+        return "Invalid text! Please try again!"
+
+    return f"For the given statement, the system resonse is \
+    'anger': {anger}, 'disgust': {disgust}, 'fear': {fear}, \
+    'joy': {joy}, 'sadness': {sadness}. The dominant emotion is {domin_emotion}."
 
 @app.route("/")
 def render_index_page():
+    """render index"""
     return render_template('index.html')
 
 if __name__ == "__main__":
